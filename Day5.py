@@ -65,9 +65,10 @@ def Day5Part2(puzzleInput, inputValue):
     index = 0
     series = puzzleInput
     output = []
+    followedInstructions = []
 
     while index < len(series):
-        word = str(series[index])
+        word = str(series[index]) 
         if len(word) == 4:
             instruction = int(word[2:]) #Addition/Multiplication, etc
             firstMode = int(word[1]) # Position Mode / Immediate Mode for Parameter 1
@@ -81,7 +82,10 @@ def Day5Part2(puzzleInput, inputValue):
             firstMode = 0 # Position Mode / Immediate Mode for Parameter 1
             secondMode = 0 # Position Mode / Immediate Mode for Parameter 2
 
-        if instruction == 1:
+        followedInstructions.append(instruction)
+        print(followedInstructions)
+
+        if instruction == 1:                                            # INSTRUCTION 1
             #addition
             if firstMode == 0:
                 firstValue = series[series[index + 1]]
@@ -97,7 +101,7 @@ def Day5Part2(puzzleInput, inputValue):
 
             series[series[index + 3]] = val
             index = index + 4
-        elif instruction == 2:
+        elif instruction == 2:                                          # INSTRUCTION 2
             #multiplication
             if firstMode == 0:
                 firstValue = series[series[index + 1]]
@@ -113,13 +117,13 @@ def Day5Part2(puzzleInput, inputValue):
 
             series[series[index + 3]] = val
             index = index + 4
-        elif instruction == 3:
+        elif instruction == 3:                                          # INSTRUCTION 3
             series[series[index + 1]] = inputValue
             index = index + 2
-        elif instruction == 4:
+        elif instruction == 4:                                          # INSTRUCTION 4
             output.append(series[series[index + 1]])
             index = index + 2
-        elif instruction == 5:
+        elif instruction == 5:                                          # INSTRUCTION 5
             if firstMode == 0:
                 if series[series[index + 1]] == 0:
                     index = index + 3
@@ -132,25 +136,76 @@ def Day5Part2(puzzleInput, inputValue):
                 if series[index + 1] == 0:
                     index = index + 3
                 else:
+                    if secondMode == 0:
+                        index = series[series[index + 2]]
+                    elif secondMode == 1:
+                        index = series[index + 2]
+        elif instruction == 6:                                          # INSTRUCTION 6
+            if firstMode == 0:
+                if series[series[index + 1]] == 0:
+                    if secondMode == 0:
+                        index = series[series[index + 2]]
+                    elif secondMode == 1:
+                        index = series[index + 2]
+                else:
                     index = index + 3
-        elif instruction == 6:
-            if series[index + 1] == 0:
-                index = series[index + 2]
-            else:
-                index = index + 3
-        elif instruction == 7:
-            if series[index + 1] < series[index + 2]: # first parameter is smaller than second parameter
-                series[series[index + 3]] = 1
-            else:
-                series[series[index + 3]] = 0
+            elif firstMode == 1:
+                if series[index + 1] == 0:
+                    if secondMode == 0:
+                        index = series[series[index + 2]]
+                    elif secondMode == 1:
+                        index = series[index + 2]
+                else:
+                    index = index + 3
+        elif instruction == 7:                                          # INSTRUCTION 7
+            if firstMode == 0:
+                if secondMode == 0:
+                    if series[series[index + 1]] < series[series[index + 2]]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+                elif secondMode == 1:
+                    if series[series[index + 1]] < series[index + 2]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+            elif firstMode == 1:
+                if secondMode == 0:
+                    if series[index + 1] < series[series[index + 2]]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+                elif secondMode == 1:
+                    if series[index + 1] < series[index + 2]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
             index = index + 4
-        elif instruction == 8:
-            if series[index + 1] == series[index + 2]: # first parameter is equal to the second parameter
-                series[series[index + 3]] = 1
-            else:
-                series[series[index + 3]] = 0
+        elif instruction == 8:                                           # INSTRUCTION 8
+            if firstMode == 0:
+                if secondMode == 0:
+                    if series[series[index + 1]] == series[series[index + 2]]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+                elif secondMode == 1:
+                    if series[series[index + 1]] == series[index + 2]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+            elif firstMode == 1:
+                if secondMode == 0:
+                    if series[index + 1] == series[series[index + 2]]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
+                elif secondMode == 1:
+                    if series[index + 1] == series[index + 2]:
+                        series[series[index + 3]] = 1
+                    else:
+                        series[series[index + 3]] = 0
             index = index + 4
-        elif instruction == 99:
+        elif instruction == 99:                                          # INSTRUCTION 99
             break 
 
     return output
@@ -160,4 +215,4 @@ test2 = [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]
 test3 = [3,3,1105,-1,9,1101,0,0,12,4,12,99,1]
 test4 = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
 
-print(Day5Part2(test4, 5))
+print(Day5Part2(test, 5))
